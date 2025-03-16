@@ -1,0 +1,413 @@
+// routes/notes.js
+const express = require('express');
+const Note = require('../models/Note');
+const Business = require('../models/Business');
+const OneDriveService = require('../services/oneDriveService');
+const router = express.Router();
+
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized' });
+};
+
+// Get all notes for a business
+router.get('/business/:businessId', isAuthenticated, async (req, res) => {
+  try {
+    // Verify business belongs to user
+    const business = await Business.findOne({ 
+      _id: req.params.businessId,
+      user: req.user._id
+    });
+    
+    if (!business) {
+      return res.status(404).json({ message: 'Business not found' });
+    }
+    
+    const notes = await Note.find({ 
+      business: req.params.businessId,
+      user: req.user._id
+    }).sort({ updatedAt: -1 });
+    
+    res.json(notes);
+  } catch (error) {
+    console.error('Error fetching notes:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get a single note
+router.get('/:id', isAuthenticated, async (req, res) => {
+  try {
+    const note = await Note.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    });
+    
+    if (!note) {
+      return res.status(404).json({ message: 'Note not found' });
+    }
+    
+    res.json(note);
+  } catch (error) {
+    console.error('Error fetching note:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Create a new note
+router.post('/', isAuthenticated, async (req, res) => {
+  try {
+    // Verify business belongs to user
+    const business = await Business.findOne({ 
+      _id: req.body.business,
+      user: req.user._id
+    });
+    
+    if (!business) {
+      return res.status(404).json({ message: 'Business not found' });
+    }
+    
+    const noteData = {
+      ...req.body,
+      user: req.user._id
+    };
+    
+    const note = new Note(noteData);
+    
+    // Upload to OneDrive if user has Microsoft integration
+    if (req.user.microsoftAccessToken) {
+      try {
+        const oneDriveService = new OneDriveService(req.user);
+        const oneDriveInfo = await oneDriveService.uploadNote(note, business.name);
+        
+        note.oneDriveId = oneDriveInfo.oneDriveId;
+        note.oneDriveUrl = oneDriveInfo.oneDriveUrl;
+      } catch (oneDriveError) {
+        console.error('OneDrive note upload error:', oneDriveError);
+        // Continue even if OneDrive upload fails
+      }
+    }
+    
+    await note.save();
+    res.status(201).json(note);
+  } catch (error) {
+    console.error('Error creating note:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update a note
+router.put('/:id', isAuthenticated, async (req, res) => {
+  try {
+    // Find the existing note
+    const existingNote = await Note.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    });
+    
+    if (!existingNote) {
+      return res.status(404).json({ message: 'Note not found' });
+    }
+    
+    // Update note fields (except user and business)
+    existingNote.title = req.body.title;
+    existingNote.content = req.body.content;
+    existingNote.tags = req.body.tags;
+    
+    // Update in OneDrive if it exists there
+    if (req.user.microsoftAccessToken && existingNote.oneDriveId) {
+      try {
+        const business = await Business.findById(existingNote.business);
+        const oneDriveService = new OneDriveService(req.user);
+        
+        // Delete old file and create new one
+        await oneDriveService.deleteFile(existingNote.oneDriveId);
+        const oneDriveInfo = await oneDriveService.uploadNote(existingNote, business.name);
+        
+        existingNote.oneDriveId = oneDriveInfo.oneDriveId;
+        existingNote.oneDriveUrl = oneDriveInfo.oneDriveUrl;
+      } catch (oneDriveError) {
+        console.error('OneDrive note update error:', oneDriveError);
+        // Continue even if OneDrive update fails
+      }
+    }
+    
+    await existingNote.save();
+    res.json(existingNote);
+  } catch (error) {
+    console.error('Error updating note:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Delete a note
+router.delete('/:id', isAuthenticated, async (req, res) => {
+  try {
+    const note = await Note.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    });
+    
+    if (!note) {
+      return res.status(404).json({ message: 'Note not found' });
+    }
+    
+    // Delete from OneDrive if it exists there
+    if (req.user.microsoftAccessToken && note.oneDriveId) {
+      try {
+        const oneDriveService = new OneDriveService(req.user);
+        await oneDriveService.deleteFile(note.oneDriveId);
+      } catch (oneDriveError) {
+        console.error('OneDrive note deletion error:', oneDriveError);
+        // Continue even if OneDrive deletion fails
+      }
+    }
+    
+    await note.remove();
+    res.json({ message: 'Note deleted' });
+  } catch (error) {
+    console.error('Error deleting note:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Search notes
+router.get('/search/:query', isAuthenticated, async (req, res) => {
+  try {
+    const notes = await Note.find({
+      user: req.user._id,
+      $text: { $search: req.params.query }
+    }).sort({ score: { $meta: 'textScore' } });
+    
+    res.json(notes);
+  } catch (error) {
+    console.error('Error searching notes:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+module.exports = router;
+
+// routes/documents.js
+const express = require('express');
+const multer = require('multer');
+const Document = require('../models/Document');
+const Business = require('../models/Business');
+const OneDriveService = require('../services/oneDriveService');
+const router = express.Router();
+
+// Set up multer for file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
+
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized' });
+};
+
+// Get all documents for a business
+router.get('/business/:businessId', isAuthenticated, async (req, res) => {
+  try {
+    // Verify business belongs to user
+    const business = await Business.findOne({ 
+      _id: req.params.businessId,
+      user: req.user._id
+    });
+    
+    if (!business) {
+      return res.status(404).json({ message: 'Business not found' });
+    }
+    
+    const documents = await Document.find({ 
+      business: req.params.businessId,
+      user: req.user._id
+    }).sort({ createdAt: -1 });
+    
+    res.json(documents);
+  } catch (error) {
+    console.error('Error fetching documents:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get a single document
+router.get('/:id', isAuthenticated, async (req, res) => {
+  try {
+    const document = await Document.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    });
+    
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    
+    res.json(document);
+  } catch (error) {
+    console.error('Error fetching document:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Upload a new document
+router.post('/', isAuthenticated, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+    
+    // Verify business belongs to user
+    const business = await Business.findOne({ 
+      _id: req.body.business,
+      user: req.user._id
+    });
+    
+    if (!business) {
+      return res.status(404).json({ message: 'Business not found' });
+    }
+    
+    // Upload to OneDrive
+    if (!req.user.microsoftAccessToken) {
+      return res.status(400).json({ message: 'Microsoft integration required for document upload' });
+    }
+    
+    try {
+      const oneDriveService = new OneDriveService(req.user);
+      const filename = req.file.originalname;
+      const fileBuffer = req.file.buffer;
+      
+      const oneDriveInfo = await oneDriveService.uploadFile(
+        fileBuffer, 
+        filename, 
+        business.name, 
+        'Documents'
+      );
+      
+      // Create document record
+      const document = new Document({
+        name: req.body.name || filename,
+        description: req.body.description || '',
+        fileType: req.file.mimetype,
+        fileSize: req.file.size,
+        tags: req.body.tags ? req.body.tags.split(',') : [],
+        oneDriveId: oneDriveInfo.oneDriveId,
+        oneDriveUrl: oneDriveInfo.oneDriveUrl,
+        business: business._id,
+        user: req.user._id
+      });
+      
+      await document.save();
+      res.status(201).json(document);
+    } catch (oneDriveError) {
+      console.error('OneDrive document upload error:', oneDriveError);
+      return res.status(500).json({ message: 'Failed to upload document to OneDrive' });
+    }
+  } catch (error) {
+    console.error('Error uploading document:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update document metadata
+router.put('/:id', isAuthenticated, async (req, res) => {
+  try {
+    const document = await Document.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    });
+    
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    
+    // Update document fields
+    if (req.body.name) document.name = req.body.name;
+    if (req.body.description) document.description = req.body.description;
+    if (req.body.tags) document.tags = req.body.tags;
+    
+    await document.save();
+    res.json(document);
+  } catch (error) {
+    console.error('Error updating document:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Delete a document
+router.delete('/:id', isAuthenticated, async (req, res) => {
+  try {
+    const document = await Document.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    });
+    
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    
+    // Delete from OneDrive
+    if (req.user.microsoftAccessToken && document.oneDriveId) {
+      try {
+        const oneDriveService = new OneDriveService(req.user);
+        await oneDriveService.deleteFile(document.oneDriveId);
+      } catch (oneDriveError) {
+        console.error('OneDrive document deletion error:', oneDriveError);
+        // Continue even if OneDrive deletion fails
+      }
+    }
+    
+    await document.remove();
+    res.json({ message: 'Document deleted' });
+  } catch (error) {
+    console.error('Error deleting document:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Download document
+router.get('/:id/download', isAuthenticated, async (req, res) => {
+  try {
+    const document = await Document.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    });
+    
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    
+    // Download from OneDrive
+    if (!req.user.microsoftAccessToken) {
+      return res.status(400).json({ message: 'Microsoft integration required for document download' });
+    }
+    
+    try {
+      const oneDriveService = new OneDriveService(req.user);
+      const fileContent = await oneDriveService.getFileContent(document.oneDriveId);
+      
+      // Set appropriate headers
+      res.set('Content-Type', document.fileType);
+      res.set('Content-Disposition', `attachment; filename="${document.name}"`);
+      
+      // Send file
+      res.send(fileContent);
+    } catch (oneDriveError) {
+      console.error('OneDrive document download error:', oneDriveError);
+      return res.status(500).json({ message: 'Failed to download document from OneDrive' });
+    }
+  } catch (error) {
+    console.error('Error downloading document:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+module.exports = router;
