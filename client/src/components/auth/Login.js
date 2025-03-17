@@ -1,10 +1,10 @@
-// src/components/Login.js
+// src/components/auth/Login.js
 import React, { useState } from 'react';
 import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaMicrosoft } from 'react-icons/fa';
-import api from '../utils/api';
-import { useAuth } from '../contexts/AuthContext';
+import api from '../../utils/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -84,7 +84,7 @@ const Login = () => {
                     {loading ? 'Signing in...' : 'Sign In'}
                   </Button>
                   
-                  <a
+                  
                     href={`${process.env.REACT_APP_API_URL}/auth/microsoft`}
                     className="btn btn-outline-secondary"
                   >
