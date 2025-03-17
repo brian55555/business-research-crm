@@ -1,16 +1,34 @@
 # Business Research CRM
 
-A comprehensive CRM system designed specifically for business research, featuring advanced note-taking, document management, and Microsoft OneDrive integration.
+A comprehensive CRM system designed specifically for business research, featuring advanced contact management, Notion-like note-taking, document management, and Microsoft OneDrive integration.
 
 ## Features
 
+### Core Features
 - **Business Management**: Track and organize businesses you're researching
-- **Rich Note-Taking**: Take detailed notes with full formatting capabilities
+- **Notion-Like Note-Taking**: Take structured notes with block-based editing and rich formatting
+- **Advanced Contact Management**: Track detailed contact information with interaction history
 - **Document Management**: Upload, organize, and share documents
 - **News Articles**: Save and catalog relevant news about businesses
 - **Task Management**: Keep track of research tasks and deadlines
 - **Cloud Storage**: Seamless Microsoft OneDrive integration
 - **User Authentication**: Secure login with email or Microsoft account
+
+### Contact Management Features
+- Track detailed contact information including social profiles
+- Record interaction history with dates and outcomes
+- Categorize by relationship strength
+- Designate primary contacts for each business
+- View contacts in grid or list layout
+- Advanced search and filtering
+
+### Note-Taking Features
+- Block-based editing similar to Notion
+- Markdown-style shortcuts
+- Rich text formatting options
+- Image, table, and divider embedding
+- Tag-based organization
+- Automatic syncing with OneDrive
 
 ## Tech Stack
 
@@ -25,7 +43,7 @@ A comprehensive CRM system designed specifically for business research, featurin
 - React
 - React Router
 - React Bootstrap for UI components
-- TinyMCE for rich text editing
+- Draft.js for rich text editing
 - Axios for API calls
 - Context API for state management
 
@@ -46,11 +64,10 @@ cd business-research-crm
 
 2. Install backend dependencies:
 ```bash
-cd server
 npm install
 ```
 
-3. Create a `.env` file in the server directory with the following variables:
+3. Create a `.env` file in the root directory with the following variables:
 ```
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/business_crm
@@ -65,20 +82,19 @@ CLIENT_URL=http://localhost:3000
 
 4. Install frontend dependencies:
 ```bash
-cd ../client
+cd client
 npm install
 ```
 
 5. Create a `.env` file in the client directory:
 ```
-REACT_APP_API_URL=http://localhost:5000
+REACT_APP_API_URL=http://localhost:5000/api
 ```
 
 ### Running the Application
 
 1. Start the backend server:
 ```bash
-cd server
 npm run dev
 ```
 
@@ -93,12 +109,19 @@ npm start
 ## Setting Up Microsoft OneDrive Integration
 
 1. Register a new application in the [Azure Portal](https://portal.azure.com/)
-2. Set the redirect URI to `http://localhost:5000/auth/microsoft/callback` (for development)
+2. Set the redirect URI to `http://localhost:5000/api/auth/microsoft/callback` (for development)
 3. Add the following API permissions:
    - Microsoft Graph > Files.ReadWrite.All
    - Microsoft Graph > User.Read
    - Microsoft Graph > offline_access
 4. Update your `.env` file with the Azure app credentials
+
+## Authentication Options
+
+The CRM supports two authentication methods:
+
+1. **Email/Password**: Traditional username and password authentication
+2. **Microsoft OAuth**: Sign in with Microsoft account (enables OneDrive integration)
 
 ## Project Structure
 
@@ -106,6 +129,13 @@ npm start
 business-research-crm/
 ├── server/                   # Backend
 │   ├── models/               # Mongoose models
+│   │   ├── User.js           # User model
+│   │   ├── Business.js       # Business model
+│   │   ├── Contact.js        # Contact model
+│   │   ├── Note.js           # Note model
+│   │   ├── Document.js       # Document model
+│   │   ├── NewsArticle.js    # News article model
+│   │   └── Task.js           # Task model
 │   ├── routes/               # API routes
 │   ├── services/             # Service modules
 │   ├── utils/                # Utility functions
@@ -115,6 +145,9 @@ business-research-crm/
 │   ├── public/               # Static files
 │   └── src/
 │       ├── components/       # React components
+│       │   ├── auth/         # Authentication components
+│       │   ├── layout/       # Layout components
+│       │   └── ...           # Feature components
 │       ├── contexts/         # Context providers
 │       ├── utils/            # Utility functions
 │       ├── App.js            # Main App component
@@ -123,15 +156,23 @@ business-research-crm/
 └── README.md                 # Project documentation
 ```
 
-## Key Functionality
+## Key Components
 
 ### Business Management
 - Create, view, edit, and delete business profiles
 - Track industry, contacts, and research stage
 - Add tags for easy categorization
 
+### Contact Management
+- Comprehensive contact profiles
+- Interaction history tracking
+- Relationship strength indicators
+- Primary contact designation
+- Grid and list views
+
 ### Notes
-- Rich text editor with formatting options
+- Notion-like block editor
+- Rich text formatting options
 - Automatic syncing with OneDrive
 - Tag notes for easy searching
 
@@ -165,6 +206,14 @@ business-research-crm/
 - `PUT /api/businesses/:id` - Update a business
 - `DELETE /api/businesses/:id` - Delete a business
 
+### Contacts
+- `GET /api/contacts` - Get all contacts
+- `GET /api/contacts/business/:businessId` - Get contacts for a business
+- `POST /api/contacts` - Create a new contact
+- `PUT /api/contacts/:id` - Update a contact
+- `DELETE /api/contacts/:id` - Delete a contact
+- `POST /api/contacts/:id/interactions` - Add interaction to contact
+
 ### Notes
 - `GET /api/notes/business/:businessId` - Get notes for a business
 - `POST /api/notes` - Create a new note
@@ -176,6 +225,12 @@ business-research-crm/
 - `POST /api/documents` - Upload a document
 - `GET /api/documents/:id/download` - Download a document
 - `DELETE /api/documents/:id` - Delete a document
+
+### News Articles
+- `GET /api/news/business/:businessId` - Get news articles for a business
+- `POST /api/news` - Create a new news article
+- `PUT /api/news/:id` - Update a news article
+- `DELETE /api/news/:id` - Delete a news article
 
 ### Tasks
 - `GET /api/tasks` - Get all tasks
@@ -201,6 +256,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - Microsoft Graph API for OneDrive integration
-- TinyMCE for the rich text editor
+- Draft.js for the rich text editor
 - MongoDB Atlas for database hosting
 - React Bootstrap for UI components
