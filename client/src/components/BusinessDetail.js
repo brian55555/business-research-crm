@@ -10,7 +10,6 @@ import DocumentsList from './DocumentsList';
 import DocumentUpload from './DocumentUpload';
 import NewsArticlesList from './NewsArticlesList';
 import NewsArticleForm from './NewsArticleForm';
-import TasksList from './TasksList';
 import TaskForm from './TaskForm';
 import ContactsList from './ContactsList';
 
@@ -256,7 +255,7 @@ const BusinessDetail = () => {
                         <FaTasks className="me-2" /> New Task
                       </Button>
                     </div>
-                    <TasksList businessId={id} onEditTask={handleEditTask} />
+                    {/* <TasksList businessId={id} onEditTask={handleEditTask} /> */}
                   </Tab.Pane>
                 </Tab.Content>
               </Col>

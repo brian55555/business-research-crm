@@ -127,10 +127,10 @@ const Register = () => {
                     {loading ? 'Creating Account...' : 'Create Account'}
                   </Button>
                   
-                  
+                  <a
                     href={`${process.env.REACT_APP_API_URL}/auth/microsoft`}
-                    className="btn btn-outline-secondary"
-                  >
+                    className="btn btn-outline-secondary">
+                
                     <FaMicrosoft className="me-2" /> Sign up with Microsoft
                   </a>
                 </div>

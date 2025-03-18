@@ -134,3 +134,118 @@ const BusinessForm = ({ businessData, onSave, onCancel }) => {
                   <option value="201-500">201-500 employees</option>
                   <option value="501-1000">501-1000 employees</option>
                   <option value="1001+">1001+ employees</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Founded</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="founded"
+                  value={formData.founded}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Headquarters</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="headquarters"
+                  value={formData.headquarters}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Revenue</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="revenue"
+                  value={formData.revenue}
+                  onChange={handleChange}
+                  placeholder="e.g. $1M-$5M"
+                />
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Research Stage</Form.Label>
+                <Form.Select
+                  name="stage"
+                  value={formData.stage}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="Researching">Researching</option>
+                  <option value="Contacting">Contacting</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Negotiating">Negotiating</option>
+                  <option value="Closed">Closed</option>
+                  <option value="Not Interested">Not Interested</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={4}
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          
+          <Form.Group className="mb-4">
+            <Form.Label>Tags (comma-separated)</Form.Label>
+            <Form.Control
+              type="text"
+              name="tags"
+              value={formData.tags}
+              onChange={handleChange}
+              placeholder="e.g. tech, startup, saas"
+            />
+          </Form.Group>
+          
+          <div className="d-flex justify-content-end">
+            <Button
+              variant="secondary"
+              onClick={onCancel || (() => navigate(-1))}
+              className="me-2"
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    className="me-2"
+                  />
+                  Saving...
+                </>
+              ) : (
+                'Save Business'
+              )}
+            </Button>
+          </div>
+        </Form>
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default BusinessForm;

@@ -147,7 +147,7 @@ const NotionEditor = ({ businessId, noteId, onSaved, onCancel }) => {
     // Handle Markdown-style shortcuts
     const contentState = editorState.getCurrentContent();
     const selection = editorState.getSelection();
-    const currentBlock = contentBlock = contentState.getBlockForKey(selection.getStartKey());
+    const currentBlock= contentState.getBlockForKey(selection.getStartKey());
     const blockLength = currentBlock.getLength();
     
     if (selection.getAnchorOffset() !== blockLength) return 'not-handled';

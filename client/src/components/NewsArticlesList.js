@@ -96,4 +96,44 @@ const NewsArticlesList = ({ businessId }) => {
                     <h5>{article.title}</h5>
                     <div className="text-muted mb-2">
                       <span className="me-3">Source: {article.source}</span>
-                      <span>Published: {formatDate(article.publishDate)}
+                      <span>Published: {formatDate(article.publishDate)}</span>
+                    </div>
+                    <p>{article.summary}</p>
+                    <div>
+                      {article.tags && article.tags.map((tag, index) => (
+                        <Badge bg="secondary" key={index} className="me-1">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="d-flex flex-column">
+                    {article.url && (
+                      <a
+                        href={article.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline-primary btn-sm mb-2"
+                      >
+                        <FaExternalLinkAlt className="me-1" /> View Article
+                      </a>
+                    )}
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => handleDeleteArticle(article._id)}
+                    >
+                      <FaTrash className="me-1" /> Delete
+                    </Button>
+                  </div>
+                </div>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        )}
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default NewsArticlesList;

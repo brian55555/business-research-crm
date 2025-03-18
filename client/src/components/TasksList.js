@@ -132,4 +132,121 @@ const TasksList = ({ businessId, onEditTask }) => {
                 type="text"
                 placeholder="Search tasks..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </InputGroup>
+          </div>
+          <div className="d-flex mb-2">
+            <Form.Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="me-2"
+              style={{ width: '130px' }}
+            >
+              <option value="">All Statuses</option>
+              <option value="Todo">Todo</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </Form.Select>
+            <Form.Select
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+              style={{ width: '130px' }}
+            >
+              <option value="">All Priorities</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </Form.Select>
+          </div>
+        </div>
+        
+        {filteredTasks.length === 0 ? (
+          <div className="text-center py-5">
+            <p className="mb-0">No tasks found.</p>
+          </div>
+        ) : (
+          <ListGroup variant="flush">
+            {filteredTasks.map((task) => (
+              <ListGroup.Item key={task._id} className="py-3">
+                <div className="d-flex justify-content-between align-items-start">
+                  <div className="me-auto">
+                    <div className="d-flex align-items-center mb-1">
+                      <h5 className="mb-0">{task.title}</h5>
+                      <Badge bg={getStatusVariant(task.status)} className="ms-2">
+                        {task.status}
+                      </Badge>
+                      <Badge bg={getPriorityVariant(task.priority)} className="ms-2">
+                        {task.priority}
+                      </Badge>
+                    </div>
+                    
+                    {task.description && (
+                      <p className="mb-2">{task.description}</p>
+                    )}
+                    
+                    {!businessId && task.business && (
+                      <p className="text-muted mb-1">
+                        <strong>Business:</strong> {task.business.name}
+                      </p>
+                    )}
+                    
+                    {task.dueDate && (
+                      <p className={`mb-0 ${getDueDateClass(task.dueDate)}`}>
+                        <strong>Due:</strong> {formatDate(task.dueDate)}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="d-flex">
+                    {task.status !== 'Completed' && (
+                      <Dropdown className="me-1">
+                        <Dropdown.Toggle variant="outline-success" size="sm" id={`status-dropdown-${task._id}`}>
+                          <FaArrowRight className="me-1" /> Move
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          {task.status !== 'Todo' && (
+                            <Dropdown.Item onClick={() => handleStatusChange(task._id, 'Todo')}>
+                              To Do
+                            </Dropdown.Item>
+                          )}
+                          {task.status !== 'In Progress' && (
+                            <Dropdown.Item onClick={() => handleStatusChange(task._id, 'In Progress')}>
+                              In Progress
+                            </Dropdown.Item>
+                          )}
+                          <Dropdown.Item onClick={() => handleStatusChange(task._id, 'Completed')}>
+                            <FaCheck className="me-1" /> Complete
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )}
+                    
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      className="me-1"
+                      onClick={() => onEditTask(task._id)}
+                    >
+                      <FaEdit />
+                    </Button>
+                    
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => handleDeleteTask(task._id)}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </div>
+                </div>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        )}
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default TasksList;

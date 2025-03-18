@@ -140,3 +140,78 @@ const NewsArticleForm = ({ businessId, articleId, onSaved, onCancel }) => {
               </Form.Group>
             </Col>
           </Row>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>URL</Form.Label>
+            <Form.Control
+              type="url"
+              name="url"
+              value={formData.url}
+              onChange={handleChange}
+              placeholder="https://example.com/article"
+            />
+          </Form.Group>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Summary</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={4}
+              name="summary"
+              value={formData.summary}
+              onChange={handleChange}
+              placeholder="Brief summary of the article"
+            />
+          </Form.Group>
+          
+          <Form.Group className="mb-4">
+            <Form.Label>Tags (comma-separated)</Form.Label>
+            <Form.Control
+              type="text"
+              name="tags"
+              value={formData.tags}
+              onChange={handleChange}
+              placeholder="e.g. funding, expansion, acquisition"
+            />
+          </Form.Group>
+          
+          <div className="d-flex justify-content-end">
+            <Button
+              variant="secondary"
+              onClick={onCancel}
+              className="me-2"
+              disabled={loading}
+            >
+              <FaTimes className="me-1" /> Cancel
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    className="me-2"
+                  />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <FaSave className="me-1" /> Save Article
+                </>
+              )}
+            </Button>
+          </div>
+        </Form>
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default NewsArticleForm;
