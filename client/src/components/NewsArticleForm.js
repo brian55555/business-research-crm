@@ -139,4 +139,7 @@ const NewsArticleForm = ({ businessId, articleId, onSaved, onCancel }) => {
                 />
               </Form.Group>
             </Col>
-          </Row>
+          </Row></Form></Card.Body></Card>)}
+
+
+export default NewsArticleForm;

@@ -96,4 +96,6 @@ const NewsArticlesList = ({ businessId }) => {
                     <h5>{article.title}</h5>
                     <div className="text-muted mb-2">
                       <span className="me-3">Source: {article.source}</span>
-                      <span>Published: {formatDate(article.publishDate)}
+                      <span>Published: {formatDate(article.publishDate)}</span></div></div></div></ListGroup.Item>))}</ListGroup>)}</Card.Body></Card>)}
+
+export default NewsArticlesList

@@ -133,4 +133,6 @@ const BusinessForm = ({ businessData, onSave, onCancel }) => {
                   <option value="51-200">51-200 employees</option>
                   <option value="201-500">201-500 employees</option>
                   <option value="501-1000">501-1000 employees</option>
-                  <option value="1001+">1001+ employees</option>
+                  <option value="1001+">1001+ employees</option></Form.Select></Form.Group></Col></Row></Form></Card.Body></Card>)}
+
+    export default BusinessForm

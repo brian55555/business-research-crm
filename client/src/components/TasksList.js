@@ -132,4 +132,4 @@ const TasksList = ({ businessId, onEditTask }) => {
                 type="text"
                 placeholder="Search tasks..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)
+                onChange={(e) => setSearchTerm(e.target.value)}></Form.Control></InputGroup></div></div></Card.Body></Card>)}

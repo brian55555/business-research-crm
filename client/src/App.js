@@ -5,8 +5,8 @@ import { Container } from 'react-bootstrap';
 import { useAuth } from './contexts/AuthContext';
 
 // Layout components
-import Header from './components/layout/Header';
-import Sidebar from './components/layout/Sidebar';
+import Header from './layout/Header';
+import Sidebar from './layout/Sidebar';
 
 // Authentication components
 import Login from './components/auth/Login';
@@ -17,12 +17,13 @@ import AuthCallback from './components/auth/AuthCallback';
 import Dashboard from './components/Dashboard';
 import BusinessesList from './components/BusinessesList';
 import BusinessDetail from './components/BusinessDetail';
-import BusinessForm from './components/BusinessForm';
-import Profile from './components/Profile';
+
+
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import BusinessForm from './components/BusinessForm';
 
 function App() {
   const { user, loading } = useAuth();
@@ -50,10 +51,10 @@ function App() {
             {/* Protected routes */}
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/businesses" element={<ProtectedRoute><BusinessesList /></ProtectedRoute>} />
-            <Route path="/businesses/new" element={<ProtectedRoute><BusinessForm /></ProtectedRoute>} />
+            <Route path="/businesses/new" element={<ProtectedRoute><BusinessDetail /></ProtectedRoute>} />
             <Route path="/businesses/:id" element={<ProtectedRoute><BusinessDetail /></ProtectedRoute>} />
             <Route path="/businesses/:id/edit" element={<ProtectedRoute><BusinessForm /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
             
             {/* Fallback route */}
             <Route path="*" element={<Navigate to="/" />} />
