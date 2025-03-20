@@ -4,6 +4,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
 // Check if authenticated middleware
@@ -140,7 +141,7 @@ router.get('/microsoft/callback', passport.authenticate('azure_ad_oauth2', {
 });
 
 // Get current user
-router.get('/me', isAuthenticated, (req, res) => {
+router.get('/me', jwtMiddleware, (req, res) => {
   res.json({
     user: {
       id: req.user._id,

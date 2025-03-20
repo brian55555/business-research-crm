@@ -2,6 +2,7 @@
 const express = require('express');
 const Task = require('../models/Task');
 const Business = require('../models/Business');
+const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
 // Middleware to check if user is authenticated
@@ -13,7 +14,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Get all tasks for a user
-router.get('/', isAuthenticated, async (req, res) => {
+router.get('/', jwtMiddleware, async (req, res) => {
   try {
     const tasks = await Task.find({ 
       user: req.user._id 
@@ -29,7 +30,7 @@ router.get('/', isAuthenticated, async (req, res) => {
 });
 
 // Get all tasks for a business
-router.get('/business/:businessId', isAuthenticated, async (req, res) => {
+router.get('/business/:businessId', jwtMiddleware, async (req, res) => {
   try {
     // Verify business belongs to user
     const business = await Business.findOne({ 
@@ -54,7 +55,7 @@ router.get('/business/:businessId', isAuthenticated, async (req, res) => {
 });
 
 // Get a single task
-router.get('/:id', isAuthenticated, async (req, res) => {
+router.get('/:id', jwtMiddleware, async (req, res) => {
   try {
     const task = await Task.findOne({
       _id: req.params.id,
@@ -73,7 +74,7 @@ router.get('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Create a new task
-router.post('/', isAuthenticated, async (req, res) => {
+router.post('/', jwtMiddleware, async (req, res) => {
   try {
     // If business ID is provided, verify it belongs to user
     if (req.body.business) {
@@ -103,7 +104,7 @@ router.post('/', isAuthenticated, async (req, res) => {
 });
 
 // Update a task
-router.put('/:id', isAuthenticated, async (req, res) => {
+router.put('/:id', jwtMiddleware, async (req, res) => {
   try {
     // If business ID is being updated, verify it belongs to user
     if (req.body.business) {
@@ -135,7 +136,7 @@ router.put('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Delete a task
-router.delete('/:id', isAuthenticated, async (req, res) => {
+router.delete('/:id', jwtMiddleware, async (req, res) => {
   try {
     const task = await Task.findOneAndDelete({
       _id: req.params.id,

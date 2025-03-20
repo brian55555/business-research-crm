@@ -2,6 +2,7 @@
 const express = require('express');
 const Contact = require('../models/Contact');
 const Business = require('../models/Business');
+const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
 // Middleware to check if user is authenticated
@@ -13,7 +14,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Get all contacts for a business
-router.get('/business/:businessId', isAuthenticated, async (req, res) => {
+router.get('/business/:businessId', jwtMiddleware, async (req, res) => {
   try {
     // Verify business belongs to user
     const business = await Business.findOne({ 
@@ -38,7 +39,7 @@ router.get('/business/:businessId', isAuthenticated, async (req, res) => {
 });
 
 // Get all contacts for current user
-router.get('/', isAuthenticated, async (req, res) => {
+router.get('/', jwtMiddleware, async (req, res) => {
   try {
     const contacts = await Contact.find({ 
       user: req.user._id 
@@ -54,7 +55,7 @@ router.get('/', isAuthenticated, async (req, res) => {
 });
 
 // Get a single contact
-router.get('/:id', isAuthenticated, async (req, res) => {
+router.get('/:id', jwtMiddleware, async (req, res) => {
   try {
     const contact = await Contact.findOne({
       _id: req.params.id,
@@ -73,7 +74,7 @@ router.get('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Create a new contact
-router.post('/', isAuthenticated, async (req, res) => {
+router.post('/', jwtMiddleware, async (req, res) => {
   try {
     // Verify business belongs to user
     const business = await Business.findOne({ 
@@ -109,7 +110,7 @@ router.post('/', isAuthenticated, async (req, res) => {
 });
 
 // Update a contact
-router.put('/:id', isAuthenticated, async (req, res) => {
+router.put('/:id', jwtMiddleware, async (req, res) => {
   try {
     const contact = await Contact.findOne({
       _id: req.params.id,
@@ -157,7 +158,7 @@ router.put('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Add an interaction to a contact
-router.post('/:id/interactions', isAuthenticated, async (req, res) => {
+router.post('/:id/interactions', jwtMiddleware, async (req, res) => {
   try {
     const contact = await Contact.findOne({
       _id: req.params.id,
@@ -194,7 +195,7 @@ router.post('/:id/interactions', isAuthenticated, async (req, res) => {
 });
 
 // Delete an interaction
-router.delete('/:id/interactions/:interactionId', isAuthenticated, async (req, res) => {
+router.delete('/:id/interactions/:interactionId', jwtMiddleware, async (req, res) => {
   try {
     const contact = await Contact.findOne({
       _id: req.params.id,
@@ -235,7 +236,7 @@ router.delete('/:id/interactions/:interactionId', isAuthenticated, async (req, r
 });
 
 // Delete a contact
-router.delete('/:id', isAuthenticated, async (req, res) => {
+router.delete('/:id', jwtMiddleware, async (req, res) => {
   try {
     const contact = await Contact.findOneAndDelete({
       _id: req.params.id,
@@ -254,7 +255,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Search contacts
-router.get('/search/:query', isAuthenticated, async (req, res) => {
+router.get('/search/:query', jwtMiddleware, async (req, res) => {
   try {
     const contacts = await Contact.find({
       user: req.user._id,

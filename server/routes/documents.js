@@ -4,6 +4,7 @@ const multer = require('multer');
 const Document = require('../models/Document');
 const Business = require('../models/Business');
 const OneDriveService = require('../services/oneDriveService');
+const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
 // Set up multer for file uploads
@@ -22,7 +23,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Get all documents for a business
-router.get('/business/:businessId', isAuthenticated, async (req, res) => {
+router.get('/business/:businessId', jwtMiddleware, async (req, res) => {
   try {
     // Verify business belongs to user
     const business = await Business.findOne({ 
@@ -47,7 +48,7 @@ router.get('/business/:businessId', isAuthenticated, async (req, res) => {
 });
 
 // Get a single document
-router.get('/:id', isAuthenticated, async (req, res) => {
+router.get('/:id', jwtMiddleware, async (req, res) => {
   try {
     const document = await Document.findOne({
       _id: req.params.id,
@@ -66,7 +67,7 @@ router.get('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Upload a new document
-router.post('/', isAuthenticated, upload.single('file'), async (req, res) => {
+router.post('/', jwtMiddleware, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
@@ -125,7 +126,7 @@ router.post('/', isAuthenticated, upload.single('file'), async (req, res) => {
 });
 
 // Update document metadata
-router.put('/:id', isAuthenticated, async (req, res) => {
+router.put('/:id', jwtMiddleware, async (req, res) => {
   try {
     const document = await Document.findOne({
       _id: req.params.id,
@@ -150,7 +151,7 @@ router.put('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Delete a document
-router.delete('/:id', isAuthenticated, async (req, res) => {
+router.delete('/:id', jwtMiddleware, async (req, res) => {
   try {
     const document = await Document.findOne({
       _id: req.params.id,
@@ -181,7 +182,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Download document
-router.get('/:id/download', isAuthenticated, async (req, res) => {
+router.get('/:id/download', jwtMiddleware, async (req, res) => {
   try {
     const document = await Document.findOne({
       _id: req.params.id,
