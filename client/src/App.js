@@ -54,7 +54,7 @@ function App() {
             <Route path="/businesses/new" element={<ProtectedRoute><BusinessForm /></ProtectedRoute>} />
             <Route path="/businesses/:id" element={<ProtectedRoute><BusinessDetail /></ProtectedRoute>} />
             <Route path="/businesses/:id/edit" element={<ProtectedRoute><BusinessForm /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
             
             {/* Fallback route */}
             <Route path="*" element={<Navigate to="/" />} />
