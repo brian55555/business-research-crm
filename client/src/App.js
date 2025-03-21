@@ -26,7 +26,7 @@ import BusinessForm from './components/BusinessForm';
 import Profile from './components/Profile'; 
 import Contacts from './components/ContactsList'; 
 import Tasks from './components/TasksList'; 
-import NewsArticles from './components/ArticlesList'; 
+import NewsArticles from './components/NewsArticlesList'; 
 import Documents from './components/DocumentsList'; 
 
 function App() {
