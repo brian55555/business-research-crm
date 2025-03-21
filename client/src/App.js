@@ -25,6 +25,10 @@ import BusinessDetail from './components/BusinessDetail';
 import BusinessForm from './components/BusinessForm';
 import Profile from './components/Profile'; 
 import Contacts from './components/ContactsList'; 
+import Contacts from './components/ContactsList'; 
+import Tasks from './components/TasksList'; 
+import NewsArticles from './components/ArticlesList'; 
+import Documents from './components/DocumentsList'; 
 
 function App() {
   const { user, loading } = useAuth();
@@ -57,6 +61,10 @@ function App() {
             <Route path="/businesses/:id/edit" element={<ProtectedRoute><BusinessForm /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />          
+            <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />        
+            <Route path="/newsarticles" element={<ProtectedRoute><NewsArticles /></ProtectedRoute>} />    
+            <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />    
+              
             {/* Fallback route */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
