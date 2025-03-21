@@ -1,4 +1,9 @@
 // src/App.js
+
+// CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
@@ -19,11 +24,6 @@ import BusinessesList from './components/BusinessesList';
 import BusinessDetail from './components/BusinessDetail';
 import BusinessForm from './components/BusinessForm';
 {/* import Profile from './components/Profile';  */}
-
-// CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-
 
 function App() {
   const { user, loading } = useAuth();
