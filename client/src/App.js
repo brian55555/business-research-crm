@@ -25,7 +25,6 @@ import BusinessDetail from './components/BusinessDetail';
 import BusinessForm from './components/BusinessForm';
 import Profile from './components/Profile'; 
 import Contacts from './components/ContactsList'; 
-import Contacts from './components/ContactsList'; 
 import Tasks from './components/TasksList'; 
 import NewsArticles from './components/ArticlesList'; 
 import Documents from './components/DocumentsList'; 
