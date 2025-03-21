@@ -289,7 +289,7 @@ const Profile = () => {
                     <span>Connect your Microsoft account to enable OneDrive</span>
                   </div>
                   
-                  
+                  <a
                     href={`${process.env.REACT_APP_API_URL}/auth/microsoft`}
                     className="btn btn-primary"
                   >
