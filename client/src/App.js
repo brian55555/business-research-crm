@@ -18,7 +18,7 @@ import Dashboard from './components/Dashboard';
 import BusinessesList from './components/BusinessesList';
 import BusinessDetail from './components/BusinessDetail';
 import BusinessForm from './components/BusinessForm';
-import Profile from './components/Profile';
+{/* import Profile from './components/Profile';  */}
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
