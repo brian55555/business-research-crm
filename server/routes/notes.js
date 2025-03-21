@@ -3,6 +3,7 @@ const express = require('express');
 const Note = require('../models/Note');
 const Business = require('../models/Business');
 const OneDriveService = require('../services/oneDriveService');
+const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
 // Middleware to check if user is authenticated
@@ -14,7 +15,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Get all notes for a business
-router.get('/business/:businessId', isAuthenticated, async (req, res) => {
+router.get('/business/:businessId', jwtMiddleware, async (req, res) => {
   try {
     // Verify business belongs to user
     const business = await Business.findOne({ 
@@ -39,7 +40,7 @@ router.get('/business/:businessId', isAuthenticated, async (req, res) => {
 });
 
 // Get a single note
-router.get('/:id', isAuthenticated, async (req, res) => {
+router.get('/:id', jwtMiddleware, async (req, res) => {
   try {
     const note = await Note.findOne({
       _id: req.params.id,
@@ -58,7 +59,7 @@ router.get('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Create a new note
-router.post('/', isAuthenticated, async (req, res) => {
+router.post('/', jwtMiddleware, async (req, res) => {
   try {
     // Verify business belongs to user
     const business = await Business.findOne({ 
@@ -100,7 +101,7 @@ router.post('/', isAuthenticated, async (req, res) => {
 });
 
 // Update a note
-router.put('/:id', isAuthenticated, async (req, res) => {
+router.put('/:id', jwtMiddleware, async (req, res) => {
   try {
     // Find the existing note
     const existingNote = await Note.findOne({
@@ -144,7 +145,7 @@ router.put('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Delete a note
-router.delete('/:id', isAuthenticated, async (req, res) => {
+router.delete('/:id', jwtMiddleware, async (req, res) => {
   try {
     const note = await Note.findOne({
       _id: req.params.id,
@@ -175,7 +176,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Search notes
-router.get('/search/:query', isAuthenticated, async (req, res) => {
+router.get('/search/:query', jwtMiddleware, async (req, res) => {
   try {
     const notes = await Note.find({
       user: req.user._id,

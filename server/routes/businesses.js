@@ -2,6 +2,7 @@
 const express = require('express');
 const Business = require('../models/Business');
 const OneDriveService = require('../services/oneDriveService');
+const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
 // Middleware to check if user is authenticated
@@ -13,7 +14,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Get all businesses for current user
-router.get('/', isAuthenticated, async (req, res) => {
+router.get('/', jwtMiddleware, async (req, res) => {
   try {
     const businesses = await Business.find({ user: req.user._id });
     res.json(businesses);
@@ -24,7 +25,7 @@ router.get('/', isAuthenticated, async (req, res) => {
 });
 
 // Get a single business
-router.get('/:id', isAuthenticated, async (req, res) => {
+router.get('/:id', jwtMiddleware, async (req, res) => {
   try {
     const business = await Business.findOne({
       _id: req.params.id,
@@ -43,7 +44,7 @@ router.get('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Create a new business
-router.post('/', isAuthenticated, async (req, res) => {
+router.post('/', jwtMiddleware, async (req, res) => {
   try {
     const businessData = {
       ...req.body,
@@ -72,7 +73,7 @@ router.post('/', isAuthenticated, async (req, res) => {
 });
 
 // Update a business
-router.put('/:id', isAuthenticated, async (req, res) => {
+router.put('/:id', jwtMiddleware, async (req, res) => {
   try {
     const business = await Business.findOneAndUpdate(
       { _id: req.params.id, user: req.user._id },
@@ -92,7 +93,7 @@ router.put('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Delete a business
-router.delete('/:id', isAuthenticated, async (req, res) => {
+router.delete('/:id', jwtMiddleware, async (req, res) => {
   try {
     const business = await Business.findOneAndDelete({
       _id: req.params.id,

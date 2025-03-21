@@ -44,7 +44,7 @@ app.use(passport.session());
 passport.use(new Strategy({
     clientID: process.env.AZURE_CLIENT_ID,
     clientSecret: process.env.AZURE_CLIENT_SECRET,
-    callbackURL: `${process.env.API_URL}/auth/microsoft/callback`,
+    callbackURL: `${process.env.API_URL}api/auth/microsoft/callback`,
     tenant: process.env.AZURE_TENANT_ID
   },
   (accessToken, refreshToken, params, profile, done) => {
