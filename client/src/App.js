@@ -61,7 +61,7 @@ function App() {
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />          
             <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />        
-            <Route path="/newsarticles" element={<ProtectedRoute><NewsArticles /></ProtectedRoute>} />    
+            <Route path="/news" element={<ProtectedRoute><NewsArticles /></ProtectedRoute>} />    
             <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />    
               
             {/* Fallback route */}
