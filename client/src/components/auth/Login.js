@@ -83,13 +83,14 @@ const Login = () => {
                   >
                     {loading ? 'Signing in...' : 'Sign In'}
                   </Button>
-                  
+      /*            
                   <a 
                     href={`${process.env.REACT_APP_API_URL}/auth/microsoft`}
                     className="btn btn-outline-secondary">
                   
                     <FaMicrosoft className="me-2" /> Sign in with Microsoft
                   </a>
+        */
                 </div>
               </Form>
 
