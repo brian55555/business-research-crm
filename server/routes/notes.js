@@ -2,7 +2,7 @@
 const express = require('express');
 const Note = require('../models/Note');
 const Business = require('../models/Business');
-const OneDriveService = require('../services/oneDriveService');
+// const OneDriveService = require('../services/oneDriveService');
 const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
@@ -79,6 +79,7 @@ router.post('/', jwtMiddleware, async (req, res) => {
     const note = new Note(noteData);
     
     // Upload to OneDrive if user has Microsoft integration
+    /*
     if (req.user.microsoftAccessToken) {
       try {
         const oneDriveService = new OneDriveService(req.user);
@@ -91,7 +92,7 @@ router.post('/', jwtMiddleware, async (req, res) => {
         // Continue even if OneDrive upload fails
       }
     }
-    
+    */
     await note.save();
     res.status(201).json(note);
   } catch (error) {
@@ -119,6 +120,7 @@ router.put('/:id', jwtMiddleware, async (req, res) => {
     existingNote.tags = req.body.tags;
     
     // Update in OneDrive if it exists there
+    /*
     if (req.user.microsoftAccessToken && existingNote.oneDriveId) {
       try {
         const business = await Business.findById(existingNote.business);
@@ -135,7 +137,7 @@ router.put('/:id', jwtMiddleware, async (req, res) => {
         // Continue even if OneDrive update fails
       }
     }
-    
+    */
     await existingNote.save();
     res.json(existingNote);
   } catch (error) {
@@ -157,6 +159,7 @@ router.delete('/:id', jwtMiddleware, async (req, res) => {
     }
     
     // Delete from OneDrive if it exists there
+    /*
     if (req.user.microsoftAccessToken && note.oneDriveId) {
       try {
         const oneDriveService = new OneDriveService(req.user);
@@ -166,7 +169,7 @@ router.delete('/:id', jwtMiddleware, async (req, res) => {
         // Continue even if OneDrive deletion fails
       }
     }
-    
+    */
     await note.remove();
     res.json({ message: 'Note deleted' });
   } catch (error) {
