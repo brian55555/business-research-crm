@@ -27,7 +27,7 @@ import Profile from './components/Profile';
 import Contacts from './components/ContactsList'; 
 import Tasks from './components/TasksList'; 
 import NewsArticles from './components/NewsArticlesList'; 
-import Documents from './components/DocumentsList'; 
+import Documents from './components/DocumentManager'; 
 import Notes from './components/NotesList'; 
 
 function App() {
