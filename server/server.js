@@ -36,14 +36,8 @@ app.use(session({
   cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
 
-if (process.env.NODE_ENV === 'production') {
-  app.use((req, res, next) => {
-    if (req.protocol !== 'https') {
-      return res.redirect(301, 'https://' + req.headers.host + req.url);
-    }
-    next();
-  });
-}
+app.set('trust proxy', true); 
+
 
 // Configure passport
 app.use(passport.initialize());
