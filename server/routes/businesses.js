@@ -1,7 +1,7 @@
 // routes/businesses.js
 const express = require('express');
 const Business = require('../models/Business');
-const OneDriveService = require('../services/oneDriveService');
+// const OneDriveService = require('../services/oneDriveService');
 const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
@@ -55,6 +55,7 @@ router.post('/', jwtMiddleware, async (req, res) => {
     await business.save();
     
     // Create folders in OneDrive if user has Microsoft integration
+    /*
     if (req.user.microsoftAccessToken) {
       try {
         const oneDriveService = new OneDriveService(req.user);
@@ -64,12 +65,13 @@ router.post('/', jwtMiddleware, async (req, res) => {
         // Continue even if OneDrive setup fails
       }
     }
-    
+    */
     res.status(201).json(business);
   } catch (error) {
     console.error('Error creating business:', error);
     res.status(500).json({ message: 'Server error' });
   }
+  
 });
 
 // Update a business
