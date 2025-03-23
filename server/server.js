@@ -6,7 +6,7 @@ const session = require('express-session');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
-const { Strategy } = require('passport-azure-ad-oauth2');
+// const { Strategy } = require('passport-azure-ad-oauth2');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -17,6 +17,7 @@ const notesRoutes = require('./routes/notes');
 const documentsRoutes = require('./routes/documents');
 const tasksRoutes = require('./routes/tasks');
 const newsRoutes = require('./routes/news');
+const contactsRoutes = require('./routes/contacts');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,6 +45,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Azure AD OAuth strategy for OneDrive integration
+/*
 passport.use(new Strategy({
     clientID: process.env.AZURE_CLIENT_ID,
     clientSecret: process.env.AZURE_CLIENT_SECRET,
@@ -81,7 +83,7 @@ passport.use(new Strategy({
       });
   }
 ));
-
+*/
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -108,6 +110,7 @@ app.use('/api/notes', notesRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/api/tasks', tasksRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/contacts', contactsRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
