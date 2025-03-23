@@ -28,6 +28,7 @@ import Contacts from './components/ContactsList';
 import Tasks from './components/TasksList'; 
 import NewsArticles from './components/NewsArticlesList'; 
 import Documents from './components/DocumentsList'; 
+import Notes from './components/NotesList'; 
 
 function App() {
   const { user, loading } = useAuth();
@@ -63,6 +64,7 @@ function App() {
             <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />        
             <Route path="/news" element={<ProtectedRoute><NewsArticles /></ProtectedRoute>} />    
             <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />    
+            <Route path="/notes" element={<ProtectedRoute><Documents /></ProtectedRoute>} />    
               
             {/* Fallback route */}
             <Route path="*" element={<Navigate to="/" />} />
