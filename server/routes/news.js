@@ -133,6 +133,7 @@ router.put('/:id', jwtMiddleware, async (req, res) => {
     if (req.body.tags) article.tags = req.body.tags;
     
     // Update in OneDrive if it exists there
+    /*
     if (req.user.microsoftAccessToken && article.oneDriveId) {
       try {
         const oneDriveService = new OneDriveService(req.user);
@@ -157,7 +158,7 @@ router.put('/:id', jwtMiddleware, async (req, res) => {
         // Continue even if OneDrive update fails
       }
     }
-    
+    */
     await article.save();
     res.json(article);
   } catch (error) {
@@ -179,6 +180,7 @@ router.delete('/:id', jwtMiddleware, async (req, res) => {
     }
     
     // Delete from OneDrive if it exists there
+    /*
     if (req.user.microsoftAccessToken && article.oneDriveId) {
       try {
         const oneDriveService = new OneDriveService(req.user);
@@ -188,7 +190,7 @@ router.delete('/:id', jwtMiddleware, async (req, res) => {
         // Continue even if OneDrive deletion fails
       }
     }
-    
+    */
     await article.remove();
     res.json({ message: 'News article deleted' });
   } catch (error) {
