@@ -1,6 +1,6 @@
 // DocumentUploader.js - UI component for file uploads to centralized Google Drive
 import React, { useState } from 'react';
-import storageService from '../services/storageService';
+import storageService from '..../services/storageService';
 
 const DocumentUploader = ({ businessId, category, onFileUploaded }) => {
   const [isUploading, setIsUploading] = useState(false);
