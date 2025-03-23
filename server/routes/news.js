@@ -2,7 +2,7 @@
 const express = require('express');
 const NewsArticle = require('../models/NewsArticle');
 const Business = require('../models/Business');
-const OneDriveService = require('../services/oneDriveService');
+// const OneDriveService = require('../services/oneDriveService');
 const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = express.Router();
 
@@ -80,6 +80,7 @@ router.post('/', jwtMiddleware, async (req, res) => {
     const article = new NewsArticle(articleData);
     
     // Save to OneDrive if user has Microsoft integration
+    /*
     if (req.user.microsoftAccessToken) {
       try {
         const oneDriveService = new OneDriveService(req.user);
@@ -102,7 +103,7 @@ router.post('/', jwtMiddleware, async (req, res) => {
         // Continue even if OneDrive save fails
       }
     }
-    
+    */
     await article.save();
     res.status(201).json(article);
   } catch (error) {
