@@ -6,8 +6,8 @@ import { FaEdit, FaPlus, FaTrash, FaDownload, FaNewspaper, FaTasks, FaBuilding, 
 import api from '../utils/api';
 import BusinessForm from './BusinessForm';
 import NotesManager from './NotesManager';
-import DocumentsList from './DocumentsList';
-import DocumentUpload from './DocumentUpload';
+import DocumentsList from './DocumentManager';
+import DocumentUpload from './DocumentUploader';
 import NewsArticlesList from './NewsArticlesList';
 import NewsArticleForm from './NewsArticleForm';
 import TaskForm from './TaskForm';
