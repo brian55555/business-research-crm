@@ -1,7 +1,7 @@
 // src/components/NoteView.js
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Spinner, Alert, Badge } from 'react-bootstrap';
-import { FaEdit, FaTrash, FaClock, FaTag, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaClock, FaTag, FaExternalLinkAlt, FaGoogle } from 'react-icons/fa';
 import { format } from 'date-fns';
 import api from '../utils/api';
 import { convertFromRaw } from 'draft-js';
@@ -130,16 +130,16 @@ const NoteView = ({ noteId, onEdit, onDelete, onClose }) => {
             <FaClock className="me-1" />
             Updated: {formatDate(note.updatedAt)}
           </div>
-          {note.oneDriveUrl && (
+          {note.googleDriveUrl && (
             <div className="ms-auto">
               <a 
-                href={note.oneDriveUrl} 
+                href={note.googleDriveUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-primary"
               >
-                <FaExternalLinkAlt className="me-1" />
-                View in OneDrive
+                <FaGoogle className="me-1" />
+                View in Google Drive
               </a>
             </div>
           )}

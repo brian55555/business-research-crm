@@ -1,7 +1,7 @@
 // src/components/Profile.js
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Button, Alert, Container, Row, Col, Badge, Spinner } from 'react-bootstrap';
-import { FaMicrosoft, FaUnlink, FaUserCircle, FaSave, FaKey } from 'react-icons/fa';
+import { FaUserCircle, FaSave, FaKey, FaGoogle } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
 
@@ -92,24 +92,6 @@ const Profile = () => {
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update password');
       setLoading(false);
-    }
-  };
-
-  const handleDisconnectMicrosoft = async () => {
-    if (window.confirm('Are you sure you want to disconnect your Microsoft account? This will disable OneDrive integration.')) {
-      setError('');
-      setSuccess('');
-      setLoading(true);
-      
-      try {
-        const response = await api.delete('/users/microsoft-connection');
-        setSuccess('Microsoft account disconnected successfully');
-        login(localStorage.getItem('token'), response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.response?.data?.message || 'Failed to disconnect Microsoft account');
-        setLoading(false);
-      }
     }
   };
 
@@ -259,44 +241,38 @@ const Profile = () => {
         <Col md={6}>
           <Card className="shadow-sm">
             <Card.Header className="bg-white">
-              <h4 className="mb-0">Integration Settings</h4>
+              <h4 className="mb-0">Storage Information</h4>
             </Card.Header>
             <Card.Body>
-              <h5>Microsoft Integration</h5>
+              <h5>Document Storage</h5>
               <p className="text-muted">
-                Connect your Microsoft account to enable OneDrive integration for storing notes, documents, and research materials.
+                All documents are stored in a centralized Google Drive account organized by business and category.
               </p>
               
-              {user?.hasMicrosoftIntegration ? (
-                <div>
-                  <div className="d-flex align-items-center mb-3">
-                    <Badge bg="success" className="p-2 me-2">Connected</Badge>
-                    <span>Your Microsoft account is connected</span>
-                  </div>
-                  
-                  <Button
-                    variant="outline-danger"
-                    onClick={handleDisconnectMicrosoft}
-                    disabled={loading}
-                  >
-                    <FaUnlink className="me-2" /> Disconnect Microsoft Account
-                  </Button>
+              <div>
+                <div className="d-flex align-items-center mb-3">
+                  <Badge bg="success" className="p-2 me-2">Active</Badge>
+                  <span>Centralized Google Drive storage is enabled</span>
                 </div>
-              ) : (
-                <div>
-                  <div className="d-flex align-items-center mb-3">
-                    <Badge bg="secondary" className="p-2 me-2">Not Connected</Badge>
-                    <span>Connect your Microsoft account to enable OneDrive</span>
-                  </div>
-                  
-                  <a
-                    href={`${process.env.REACT_APP_API_URL}/auth/microsoft`}
-                    className="btn btn-primary"
-                  >
-                    <FaMicrosoft className="me-2" /> Connect Microsoft Account
-                  </a>
+                
+                <div className="alert alert-info">
+                  <h6><FaGoogle className="me-2" /> Google Drive Integration</h6>
+                  <p className="mb-0">
+                    All documents uploaded through the system are automatically organized in the company's Google Drive account.
+                    No user-specific credentials required.
+                  </p>
                 </div>
-              )}
+                
+                <div className="mt-3">
+                  <h6>Storage Features:</h6>
+                  <ul>
+                    <li>Files organized by business and category</li>
+                    <li>Automatic file sharing with appropriate team members</li>
+                    <li>Role-based access control through the application</li>
+                    <li>Direct links to view or download documents</li>
+                  </ul>
+                </div>
+              </div>
             </Card.Body>
           </Card>
         </Col>
