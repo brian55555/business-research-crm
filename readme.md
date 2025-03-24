@@ -4,8 +4,8 @@ A comprehensive CRM system designed for business research and client management,
 
 ## Features
 
-- Client and business management
-- Project tracking and scheduling
+- Business management
+- Task tracking and scheduling
 - Contact management
 - Centralized document storage using Google Drive
 - Document categorization by business
@@ -48,7 +48,7 @@ npm install
 - Add the following variables:
 ```
 # Application
-PORT=3000
+PORT=80
 MONGODB_URI=mongodb://localhost:27017/business-research-crm
 JWT_SECRET=your_jwt_secret
 
